@@ -1,0 +1,34 @@
+{
+  "name": "building-empathy",
+  "version": "1.0.0",
+  "description": "voice interface experiments for the Building Web Empathy Workshop",
+  "scripts": {
+    "test": "jest",
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "author": "Mauricio Palma <mauricio.palma@woodlikeocean.com>",
+  "license": "MIT",
+  "dependencies": {
+    "babel-plugin-emotion": "^9.2.11",
+    "emotion": "^9.2.12",
+    "emotion-server": "^9.2.12",
+    "next": "^7.0.2",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-emotion": "^9.2.12"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.7",
+    "@types/next": "^7.0.3",
+    "@types/react": "^16.4.18",
+    "@types/react-dom": "^16.0.9",
+    "@zeit/next-typescript": "^1.1.1",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.6.0",
+    "jest": "^23.6.0",
+    "react-testing-library": "^5.2.1",
+    "typescript": "^3.1.3"
+  }
+}
