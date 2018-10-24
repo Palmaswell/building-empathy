@@ -2,6 +2,10 @@ import * as React from 'react';
 import Head from 'next/head';
 import styled, { css } from 'react-emotion';
 
+import * as Model from '../model';
+
+const Speech = Model.createRecognition();
+
 const basicStyles = css`
   background-color: white;
   color: cornflowerblue;
@@ -30,16 +34,31 @@ const Combined = styled.div`
   }
 `
 
-export default () => (
-  <>
-    <Head>
-    <title>Building Web Emapthy</title>
-    <meta name="description" content="Base app for the Building Web Empathy Workshop" />
-    </Head>
-    <div>
-      <Combined>
-        With <code>:hover</code>.
-      </Combined>
-    </div>
-  </>
-)
+export default class extends React.Component {
+  private Speech;
+  public componentDidMount(): void {
+    this.Speech = Speech({
+      grammars: `#JSGF V1.0; grammar commands; public  = Hola`,
+      maxAlternatives: 1,
+      interimResults: false
+    });
+  }
+
+  public render(): JSX.Element {
+    return (
+      <>
+        <Head>
+          <title>Building Web Emapthy</title>
+          <meta name="description" content="Base app for the Building Web Empathy Workshop" />
+        </Head>
+        <>
+          <Combined>
+          With <code>:hover</code>.
+          </Combined>
+          <button onClick={e => this.Speech.start(e)}>Clik Me</button>
+        </>
+      </>
+    )
+  }
+}
+
