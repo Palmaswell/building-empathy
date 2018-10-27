@@ -35,11 +35,11 @@ const Combined = styled.div`
 `
 
 export default class extends React.Component {
-  private Speech;
+  private speech;
   public componentDidMount(): void {
-    this.Speech = Speech({
+    this.speech = Speech({
       grammars: `#JSGF V1.0; grammar commands; public  = Hola`,
-      maxAlternatives: 1,
+      maxAlternatives: 1 ,
       interimResults: false
     });
   }
@@ -55,7 +55,7 @@ export default class extends React.Component {
           <Combined>
           With <code>:hover</code>.
           </Combined>
-          <button onClick={e => this.Speech.start(e)}>Clik Me</button>
+          <button onClick={e => this.speech.start(e)}>Clik Me</button>
         </>
       </>
     )

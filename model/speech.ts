@@ -1,17 +1,11 @@
+import * as speechEvent from './events';
+
 export interface SpeechProps {
-  methods: Methods;
-  result: Result;
-}
-
-interface Methods {
-  abort(e): React.MouseEventHandler<HTMLElement>;
-  start(e): React.MouseEventHandler<HTMLElement>;
-  stop(e): React.MouseEventHandler<HTMLElement>;
-}
-
-interface Result {
-  confidence: number;
-  transcript: string | string[];
+  confidence?: number;
+  transcript?: string | string[];
+  abort?(e): void;
+  start(e): void;
+  stop?(e): void;
 }
 
 interface SpeechInit {
@@ -23,8 +17,7 @@ interface SpeechInit {
 
 
 export function createRecognition() {
-
-  return (init: SpeechInit) => {
+  return (init: SpeechInit): SpeechProps => {
     const SpeechRecognition = (window as any).SpeechRecognition
       || (window as any).webkitSpeechRecognition;
     const SpeechGrammarList = (window as any).SpeechGrammarList
@@ -42,6 +35,12 @@ export function createRecognition() {
         e.preventDefault();
         console.log(e, 'this is the start event');
         recognition.start();
+        recognition.onerror = e => speechEvent.handleError(e.error);
+        recognition.onstart = () => speechEvent.handleStart();
+        recognition.onresult = e => speechEvent.handleResult({
+          confidence: e.results[0][0].confidence,
+          transcript: e.results[0][0].transcript
+        })
       }
     }
   }
