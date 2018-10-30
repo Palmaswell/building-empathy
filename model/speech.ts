@@ -7,7 +7,7 @@ interface SpeechInit {
   lang?: string;
 }
 
-export interface SpeechResult {
+export interface SpeechResultProps {
   confidence: number;
   transcript: string | string[];
 }

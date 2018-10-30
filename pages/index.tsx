@@ -4,8 +4,6 @@ import styled, { css } from 'react-emotion';
 
 import * as Model from '../model';
 
-const Speech = Model.createRecognition();
-
 const basicStyles = css`
   background-color: white;
   color: cornflowerblue;
@@ -34,10 +32,16 @@ const Combined = styled.div`
   }
 `;
 
-
+const Speech = Model.createRecognition();
 
 export default class extends React.Component {
   private speech;
+
+  public state: Model.SpeechResultProps = {
+    confidence: 0,
+    transcript: ''
+  }
+
   public componentDidMount(): void {
     this.speech = Speech({
       grammars: `#JSGF V1.0; grammar commands; public  = Hola`,
@@ -48,8 +52,11 @@ export default class extends React.Component {
 
   private handleRecognition(result) {
     const { confidence, transcript } = result.e.results[0][0];
-
-    console.log('we finally have the value', confidence, transcript);
+    this.setState({
+      ...this.state,
+      confidence,
+      transcript
+    })
   }
 
   public render(): JSX.Element {
@@ -59,12 +66,10 @@ export default class extends React.Component {
           <title>Building Web Emapthy</title>
           <meta name="description" content="Base app for the Building Web Empathy Workshop" />
         </Head>
-        <>
-          <Combined>
+        <Combined>
           With <code>:hover</code>.
-          </Combined>
-          <button onClick={e => this.speech(e, result => this.handleRecognition(result))}>Clik Me</button>
-        </>
+        </Combined>
+        <button onClick={e => this.speech(e, result => this.handleRecognition(result))}>Clik Me</button>
       </>
     )
   }
