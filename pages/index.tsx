@@ -32,7 +32,9 @@ const Combined = styled.div`
   & code {
     background-color: linen;
   }
-`
+`;
+
+
 
 export default class extends React.Component {
   private speech;
@@ -42,6 +44,12 @@ export default class extends React.Component {
       maxAlternatives: 1 ,
       interimResults: false
     });
+  }
+
+  private handleRecognition(result) {
+    const { confidence, transcript } = result.e.results[0][0];
+
+    console.log('we finally have the value', confidence, transcript);
   }
 
   public render(): JSX.Element {
@@ -55,7 +63,7 @@ export default class extends React.Component {
           <Combined>
           With <code>:hover</code>.
           </Combined>
-          <button onClick={e => this.speech.start(e)}>Clik Me</button>
+          <button onClick={e => this.speech(e, result => this.handleRecognition(result))}>Clik Me</button>
         </>
       </>
     )

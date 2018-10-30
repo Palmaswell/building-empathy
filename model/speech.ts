@@ -1,13 +1,5 @@
 import * as speechEvent from './events';
 
-export interface SpeechProps {
-  confidence?: number;
-  transcript?: string | string[];
-  abort?(e): void;
-  start(e): void;
-  stop?(e): void;
-}
-
 interface SpeechInit {
   grammars: string;
   maxAlternatives: number;
@@ -15,13 +7,19 @@ interface SpeechInit {
   lang?: string;
 }
 
+export interface SpeechResult {
+  confidence: number;
+  transcript: string | string[];
+}
+
 
 export function createRecognition() {
-  return (init: SpeechInit): SpeechProps => {
+  return (init: SpeechInit) => {
     const SpeechRecognition = (window as any).SpeechRecognition
       || (window as any).webkitSpeechRecognition;
     const SpeechGrammarList = (window as any).SpeechGrammarList
-    || (window as any).webkitSpeechGrammarList;
+      || (window as any).webkitSpeechGrammarList;
+
     const recognition = new SpeechRecognition();
     const grammarList = new SpeechGrammarList();
     recognition.maxAlternatives = init.maxAlternatives;
@@ -30,18 +28,17 @@ export function createRecognition() {
     grammarList.addFromString(init.grammars, 1);
     recognition.grammar = grammarList;
 
-    return {
-      start(e) {
-        e.preventDefault();
-        console.log(e, 'this is the start event');
-        recognition.start();
-        recognition.onerror = e => speechEvent.handleError(e.error);
-        recognition.onstart = () => speechEvent.handleStart();
-        recognition.onresult = e => speechEvent.handleResult({
-          confidence: e.results[0][0].confidence,
-          transcript: e.results[0][0].transcript
-        })
-      }
+    return (e, updater): void => {
+      e.preventDefault();
+      //-- handle recognition when it is already listeing
+      //-- look for the native events;
+      recognition.start();
+
+      recognition.onerror = e => speechEvent.handleError(e.error);
+      recognition.onstart = () => speechEvent.handleStart();
+      recognition.onresult = e => updater({ e, recognition });
+      recognition.onend = e => console.log(`🔌 Speech recognition service disconnected. ${JSON.stringify(e)}`);
+      recognition.onspeechend = () => recognition.stop();
     }
   }
 }
